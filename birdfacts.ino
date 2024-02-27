@@ -7,6 +7,7 @@
 #define AA_FONT_LARGE NotoSansBold36
 
 #define Screen1_CS 21 
+#define Screen2_CS 22
 
 #define SCREENOFF 1
 #define SCREENON 0
@@ -21,7 +22,7 @@
 #define REDDISHPURPLE 0xCBD4
 
 LGFX tft;
-LGFX_Sprite spr(&tft);
+LGFX_Sprite spr1(&tft);
 
 void setup(void)
 {
@@ -30,12 +31,13 @@ void setup(void)
   Serial.begin(250000);
 
   pinMode(Screen1_CS, OUTPUT);
+  pinMode(Screen2_CS, OUTPUT);
 
   tft.begin();
 
   tft.setRotation(1);
 
-  spr.setColorDepth(16); // 16 bit colour needed to show antialiased fonts
+  spr1.setColorDepth(16); // 16 bit colour needed to show antialiased fonts
 
   tft.fillScreen(REDDISHPURPLE);
 }
@@ -62,31 +64,29 @@ void writeScreen(int element) {
   int spriteHeight = 100;
   String factToDisplay = birdFacts[currentElement];
 
-  spr.loadFont(AA_FONT_LARGE); // Load another different font into the sprite instance
+  spr1.loadFont(AA_FONT_LARGE); // Load another different font into the sprite instance
 
-  int sentanceLength = spr.textWidth(factToDisplay); // in pixels
+  int sentanceLength = spr1.textWidth(factToDisplay); // in pixels
 
-  spr.createSprite(width, spriteHeight);   // Create a sprite 100 pixels wide and 50 high
+  spr1.createSprite(width, spriteHeight);   // Create a sprite 100 pixels wide and 50 high
  
-  spr.setTextColor(YELLOW, REDDISHPURPLE); // Set the font colour and the background colour
+  spr1.setTextColor(YELLOW, REDDISHPURPLE); // Set the font colour and the background colour
 
-  spr.setTextDatum(ML_DATUM); // Middle left datum
+  spr1.setTextDatum(ML_DATUM); // Middle left datum
 
-  spr.setTextWrap(false);
+  spr1.setTextWrap(false);
 
   digitalWrite(Screen1_CS, SCREENON);
 
-  spr.createSprite(width, spriteHeight);   // Create a sprite 100 pixels wide and 50 high
+  spr1.createSprite(width, spriteHeight);   // Create a sprite 100 pixels wide and 50 high
 
   for(int i = width; i > 0 - sentanceLength; i--) {
-    spr.fillSprite(REDDISHPURPLE);
-    spr.drawString(factToDisplay, i, spriteHeight/2); // Make sure text fits in the Sprite!
-    spr.pushSprite(0, height/2 - (spriteHeight/2) + 1);  // ok on this library it doesn't seem to be able to cope with the same number twice with two screens so this is a hack
+    spr1.fillSprite(REDDISHPURPLE);
+    spr1.drawString(factToDisplay, i, spriteHeight/2); // Make sure text fits in the Sprite!
+    spr1.pushSprite(0, height/2 - (spriteHeight/2) + 1);  // ok on this library it doesn't seem to be able to cope with the same number twice with two screens so this is a hack
   }
-
-  digitalWrite(Screen1_CS, SCREENON);
   
-  spr.unloadFont(); // Remove the font to recover memory used
+  spr1.unloadFont(); // Remove the font to recover memory used
 
-  spr.deleteSprite(); // Recover memory
+  spr1.deleteSprite(); // Recover memory
 }
