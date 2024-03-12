@@ -5,6 +5,13 @@
 
 #define AA_FONT_LARGE NotoSansBold36
 
+// **********************************************************************************
+// i have foolishly been inconsistant with regards to which output i'm using across the installation 
+// so check this carefully in code and on the board
+// i have added a hard off to the screen connection not being used so that it doesn't work if wrong
+
+// Birdfacts uses screen 1 connection
+
 #define Screen1_CS 21 
 #define Screen2_CS 22
 
@@ -77,6 +84,7 @@ void writeScreen(int element) {
 
   spr1.setTextWrap(false);
 
+  digitalWrite(Screen2_CS, SCREENOFF);
   digitalWrite(Screen1_CS, SCREENON);
 
   spr1.createSprite(width, spriteHeight);   // Create a sprite 100 pixels wide and 50 high
