@@ -1,4 +1,3 @@
-
 #include <LovyanGFX.hpp>
 #include "lgfx_setup.h"
 #include "NotoSansBold36.h"
@@ -24,6 +23,11 @@
 LGFX tft;
 LGFX_Sprite spr1(&tft);
 
+int currentElement = 0;
+int lastElement = NUMBER_OF_ELEMENTS;
+int textDelay = 500; // delay time between facts
+float textSpeed = 2.0; // Iteration speed of loop of text. 1 is slowest.
+
 void setup(void)
 {
   tft.init();
@@ -35,15 +39,12 @@ void setup(void)
 
   tft.begin();
 
-  tft.setRotation(1);
+  tft.setRotation(2);
 
   spr1.setColorDepth(16); // 16 bit colour needed to show antialiased fonts
 
   tft.fillScreen(REDDISHPURPLE);
 }
-
-int currentElement = 0;
-int lastElement = NUMBER_OF_ELEMENTS;
 
 void loop(void)
 {
@@ -55,14 +56,14 @@ void loop(void)
   Serial.print("element is ");
   Serial.println(currentElement);
     
-  delay(1000);
+  delay(textDelay);
 }
 
 void writeScreen(int element) {
   int width = tft.width(); // Half the screen width
   int height = tft.height();
   int spriteHeight = 100;
-  String factToDisplay = birdFacts[currentElement];
+  String factToDisplay = birdFacts[element];
 
   spr1.loadFont(AA_FONT_LARGE); // Load another different font into the sprite instance
 
@@ -70,7 +71,7 @@ void writeScreen(int element) {
 
   spr1.createSprite(width, spriteHeight);   // Create a sprite 100 pixels wide and 50 high
  
-  spr1.setTextColor(YELLOW, REDDISHPURPLE); // Set the font colour and the background colour
+  spr1.setTextColor(BLACK, REDDISHPURPLE); // Set the font colour and the background colour
 
   spr1.setTextDatum(ML_DATUM); // Middle left datum
 
@@ -80,7 +81,7 @@ void writeScreen(int element) {
 
   spr1.createSprite(width, spriteHeight);   // Create a sprite 100 pixels wide and 50 high
 
-  for(int i = width; i > 0 - sentanceLength; i--) {
+  for(int i = width; i > 0 - sentanceLength; i = i - textSpeed) {
     spr1.fillSprite(REDDISHPURPLE);
     spr1.drawString(factToDisplay, i, spriteHeight/2); // Make sure text fits in the Sprite!
     spr1.pushSprite(0, height/2 - (spriteHeight/2) + 1);  // ok on this library it doesn't seem to be able to cope with the same number twice with two screens so this is a hack
